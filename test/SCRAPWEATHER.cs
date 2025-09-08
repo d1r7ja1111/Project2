@@ -1,6 +1,6 @@
 namespace test
 {
-    public class WEATHER
+    public class SCRAPWEATHER
     {
         public int TestIntTTTT=> 45;
         public bool TestBoolTTTT => true;

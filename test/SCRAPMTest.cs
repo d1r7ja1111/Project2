@@ -1,6 +1,6 @@
 namespace test
 {
-    public class MTest
+    public class SCRAPMTest
     {
         public int TestInt => 88;
 

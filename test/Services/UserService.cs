@@ -1,38 +1,17 @@
-using Microsoft.Data.SqlClient;
-using Dapper;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Runtime.CompilerServices;
 using test.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using test.Repositories;
+using test.Services.interfaces;
+
 namespace test.Services
 {
-    public class UserService
+    public class UserService(IUserRepository _repository) : IUserService
     {
-        private readonly Connection con;
-        public UserService(Connection con)
-        {
-            this.con = con;
-        }
-
-        public Task<IEnumerable<UserModel>> GetAllUsers()
-        {
-            return con.GetAllUsers();
-        }
-
-        public Task<UserModel?> GetUserById(int id)
-        {
-            return con.GetUserById(id);
-        }
-        public Task<int> CreateUser(UserModel user)
-        {
-            return con.Create(user);
-        }
-        public Task<int> DeleteUser(int id)
-        {
-            return con.Delete(id);
-        }
-        public Task<int> UpdateUser(UserModel user)
-        {
-            return con.Update(user);
-        }
+        public Task<IEnumerable<UserModel>> GetAllUsers() => _repository.GetAllUsers();
+        public Task<UserModel?> GetUserById(int id) => _repository.GetUserById(id);
+        public Task<int> CreateUser(UserModel user) => _repository.Create(user);
+        public Task<int> DeleteUser(int id) => _repository.Delete(id);
+        public Task<int> UpdateUser(UserModel user) => _repository.Update(user);
     }
 }

@@ -1,51 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 using test.Models;
-using test.Services;
+using test.Services.interfaces;
 
 namespace test.Controllers
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController(IUserService _userService) : ControllerBase
     {
-        private readonly UserService userService;
-
-        public UserController(UserService userService)
-        {
-            this.userService = userService;
-        }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers() => Ok(await userService.GetAllUsers());
+        public async Task<IActionResult> GetUsers() =>
+            Ok(await _userService.GetAllUsers());
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await userService.GetUserById(id);
+            var user = await _userService.GetUserById(id);
             return user is null ? NotFound() : Ok(user);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserModel user)
         {
-            var id = await userService.CreateUser(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = id }, user);
+            var id = await _userService.CreateUser(user);
+            return CreatedAtAction(nameof(GetUserById), new { id }, user);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateUser(int id, UserModel user)
         {
-            if (id != user.id) return BadRequest();
-            await userService.UpdateUser(user);
+            if (id != user.id) return BadRequest("ID mismatch.");
+            await _userService.UpdateUser(user);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            await userService.DeleteUser(id);
+            await _userService.DeleteUser(id);
             return NoContent();
         }
-
     }
-
 }

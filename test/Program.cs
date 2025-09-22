@@ -1,3 +1,4 @@
+using RestEase;
 using test.Repositories;
 using test.Services;
 using test.Services.interfaces;
@@ -12,6 +13,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDbApi>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    var baseUrl = config["DbApi:BaseUrl"];
+    return RestClient.For<IDbApi>(baseUrl);
+});
 
 var app = builder.Build();
 
